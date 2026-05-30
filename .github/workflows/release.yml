@@ -27,5 +27,5 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Push access to neatnet/homebrew-tap (PAT or fine-grained token).
+          # Push access to neatnettech/homebrew-tap (PAT or fine-grained token).
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}

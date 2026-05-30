@@ -9,13 +9,13 @@ Pre-releases are tagged `vX.Y.Z-rc.A`; final releases `vX.Y.Z`.
 ## [Unreleased]
 
 ### Added
-- Homebrew install via the `neatnet/tap` tap (`brew install neatnet/tap/logbee`).
+- Homebrew install via the `neatnettech/tap` tap (`brew install neatnettech/tap/logbee`).
   GoReleaser publishes the formula automatically on final `vX.Y.Z` releases.
 
 ## [1.2.0-rc.1] - 2026-05-30
 
 First release of Logbee, a fork of [Hivemind](https://github.com/DarthSim/hivemind)
-by neatnet.
+by neatnettech.
 
 ### Added
 - `--log-file, -L` (env `LOGBEE_LOG_FILE`): write the aggregated output stream to
@@ -27,8 +27,8 @@ by neatnet.
   truncating it on start.
 
 ### Changed
-- Rebranded from Hivemind to Logbee: module path `github.com/neatnet/logbee`,
+- Rebranded from Hivemind to Logbee: module path `github.com/neatnettech/logbee`,
   binary `logbee`, and all environment variables `HIVEMIND_*` → `LOGBEE_*`.
 
-[Unreleased]: https://github.com/neatnet/logbee/compare/v1.2.0-rc.1...HEAD
-[1.2.0-rc.1]: https://github.com/neatnet/logbee/releases/tag/v1.2.0-rc.1
+[Unreleased]: https://github.com/neatnettech/logbee/compare/v1.2.0-rc.1...HEAD
+[1.2.0-rc.1]: https://github.com/neatnettech/logbee/releases/tag/v1.2.0-rc.1

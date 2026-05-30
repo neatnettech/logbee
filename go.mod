@@ -1,4 +1,4 @@
-module github.com/neatnet/logbee
+module github.com/neatnettech/logbee
 
 go 1.21
 

@@ -1,6 +1,6 @@
 # Logbee
 
-Logbee is a process manager for Procfile-based applications, with live log-file output. A [neatnet](https://neatnet.tech) product, forked from [Hivemind](https://github.com/DarthSim/hivemind). At the moment, it supports Linux, FreeBSD, and macOS.
+Logbee is a process manager for Procfile-based applications, with live log-file output. A [neatnettech](https://neatnet.tech) product, forked from [Hivemind](https://github.com/DarthSim/hivemind). At the moment, it supports Linux, FreeBSD, and macOS.
 
 Procfile is a simple format to specify types of processes your application provides (such as web application server, background queue process, front-end builder) and commands to run those processes. It can significantly simplify process management for developers and is used by popular Platforms-as-a-Service, such as Heroku and Deis. You can learn more about the `Procfile` format [here](https://devcenter.heroku.com/articles/procfile).
 
@@ -15,27 +15,27 @@ Logbee uses `pty` to capture process output. That fixes any problem with log cli
 #### With Homebrew (macOS / Linux)
 
 ```bash
-$ brew install neatnet/tap/logbee
+$ brew install neatnettech/tap/logbee
 ```
 
 Or tap first, then install:
 
 ```bash
-$ brew tap neatnet/tap
+$ brew tap neatnettech/tap
 $ brew install logbee
 ```
 
 #### Download a release binary
 
 Prebuilt binaries for Linux, macOS, and FreeBSD are attached to each
-[release](https://github.com/neatnet/logbee/releases/latest).
+[release](https://github.com/neatnettech/logbee/releases/latest).
 
 #### From Source
 
 You need Go 1.18 or later to build the project.
 
 ```bash
-$ go install github.com/neatnet/logbee@latest
+$ go install github.com/neatnettech/logbee@latest
 ```
 
 ## Usage
@@ -90,7 +90,7 @@ LOGBEE_TITLE=my_awsome_app
 
 ## Author
 
-Logbee is a [neatnet](https://neatnet.tech) product, forked from [Hivemind](https://github.com/DarthSim/hivemind) by Sergey "DarthSim" Aleksandrovich.
+Logbee is a [neatnettech](https://neatnet.tech) product, forked from [Hivemind](https://github.com/DarthSim/hivemind) by Sergey "DarthSim" Aleksandrovich.
 
 Highly inspired by [Foreman](https://github.com/ddollar/foreman).
 

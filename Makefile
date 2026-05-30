@@ -1,5 +1,5 @@
 BINARY  := logbee
-PKG     := github.com/neatnet/logbee
+PKG     := github.com/neatnettech/logbee
 VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
 LDFLAGS := -X main.version=$(VERSION)
 

@@ -25,8 +25,8 @@ func main() {
 	app.HelpName = "logbee"
 	app.Usage = "The mind to rule processes of your development environment"
 	app.Description = "Logbee is a process manager for Procfile-based applications"
-	app.Author = "neatnet"
-	app.Email = "hello@neatnet.tech"
+	app.Author = "neatnettech"
+	app.Email = "pp@neatnet.tech"
 	app.Version = version
 	app.ArgsUsage = "[procfile] (Use '-' to read from stdin, Procfile path can be also set with $LOGBEE_PROCFILE)"
 	app.HideHelp = true
