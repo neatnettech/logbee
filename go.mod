@@ -6,6 +6,7 @@ require (
 	github.com/DarthSim/godotenv v1.3.1
 	github.com/pkg/term v1.2.0-beta.2
 	github.com/urfave/cli v1.22.5
+	golang.org/x/term v0.17.0
 )
 
 require (
@@ -13,5 +14,5 @@ require (
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
-	golang.org/x/sys v0.0.0-20211124211545-fe61309f8881 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 )

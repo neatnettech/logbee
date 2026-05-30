@@ -8,6 +8,8 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"golang.org/x/term"
 )
 
 var colors = []int{2, 3, 4, 5, 6, 42, 130, 103, 129, 108}
@@ -23,6 +25,7 @@ type logbeeConfig struct {
 	PrintTimestamps    bool
 	LogFile            string
 	LogAppend          bool
+	Interactive        string
 }
 
 type logbee struct {
@@ -44,7 +47,7 @@ func newLogbee(conf logbeeConfig) (h *logbee) {
 		h.title = filepath.Base(conf.Root)
 	}
 
-	h.output = &multiOutput{printProcName: !conf.NoPrefix, printTimestamp: conf.PrintTimestamps}
+	h.output = &multiOutput{printProcName: !conf.NoPrefix, printTimestamp: conf.PrintTimestamps, eol: "\n"}
 
 	if len(conf.LogFile) > 0 {
 		fatalOnErr(h.output.OpenLogFile(conf.LogFile, conf.LogAppend))
@@ -58,6 +61,18 @@ func newLogbee(conf logbeeConfig) (h *logbee) {
 	for i, entry := range entries {
 		if len(procNames) == 0 || stringsContain(procNames, entry.Name) {
 			h.procs = append(h.procs, newProcess(entry.Name, entry.Command, colors[i%len(colors)], conf.Root, entry.Port, h.output))
+		}
+	}
+
+	if len(conf.Interactive) > 0 {
+		for _, proc := range h.procs {
+			if proc.Name == conf.Interactive {
+				h.output.interactiveProc = proc
+				break
+			}
+		}
+		if h.output.interactiveProc == nil {
+			fatal(fmt.Sprintf("interactive process %q not found among launched processes", conf.Interactive))
 		}
 	}
 
@@ -105,6 +120,19 @@ func (h *logbee) waitForExit() {
 
 func (h *logbee) Run() {
 	fmt.Printf("\033]0;%s | logbee\007", h.title)
+
+	// When a process is interactive, put our own terminal into raw mode so
+	// single keypresses are forwarded to it immediately (no line buffering or
+	// local echo). Raw mode disables output post-processing, so aggregated
+	// output switches to CRLF line endings to avoid staircasing.
+	if h.output.interactiveProc != nil {
+		if fd := int(os.Stdin.Fd()); term.IsTerminal(fd) {
+			if state, err := term.MakeRaw(fd); err == nil {
+				h.output.eol = "\r\n"
+				defer term.Restore(fd, state)
+			}
+		}
+	}
 
 	h.done = make(chan bool, len(h.procs))
 

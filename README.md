@@ -78,6 +78,16 @@ The file is plain, greppable text: the `name | ` prefix carries no color escapes
 
 The file is truncated on start by default; pass `--log-append` (env `LOGBEE_LOG_APPEND`) to append to an existing file instead.
 
+### Driving an interactive process (Expo, Metro, etc.)
+
+By default Logbee does not forward your keyboard to managed processes, so interactive dev servers that listen for keypresses (Expo/Metro: `r` to reload, `i`/`a` to open iOS/Android, `j` for the debugger) can't be controlled. Pass `--interactive` (`-i`, env `LOGBEE_INTERACTIVE`) with the process name to forward your terminal's stdin to that one process:
+
+```bash
+$ logbee --interactive expo
+```
+
+While an interactive process runs, Logbee puts your terminal into raw mode so single keypresses reach the process immediately (no need to press Enter). `Ctrl-C` is forwarded to the interactive process; when it exits, Logbee shuts the rest down as usual. Only one process can be interactive at a time, and its name must match an entry that's actually launched (respecting `--processes`).
+
 ### Environment
 
 If you need to set specific environment variables before running a `Procfile`, you can specify them in the `.env` file in the current working directory. The file should contain `variable=value` pairs, one per line:

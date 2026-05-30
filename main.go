@@ -42,6 +42,7 @@ func main() {
 		cli.BoolFlag{Name: "print-timestamps, T", EnvVar: "LOGBEE_PRINT_TIMESTAMPS", Usage: "timestamps will be printed if the flag is specified", Destination: &conf.PrintTimestamps},
 		cli.StringFlag{Name: "log-file, L", EnvVar: "LOGBEE_LOG_FILE", Usage: "write the aggregated, plain-text (no color) log stream to this file, live per line", Destination: &conf.LogFile},
 		cli.BoolFlag{Name: "log-append", EnvVar: "LOGBEE_LOG_APPEND", Usage: "append to the log file instead of truncating it on start", Destination: &conf.LogAppend},
+		cli.StringFlag{Name: "interactive, i", EnvVar: "LOGBEE_INTERACTIVE", Usage: "forward your terminal's stdin to this process so you can drive interactive dev servers (e.g. Expo/Metro: press r, i, a, j)", Destination: &conf.Interactive},
 	}
 
 	app.Action = func(c *cli.Context) error {

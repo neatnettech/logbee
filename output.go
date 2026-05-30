@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -26,12 +27,14 @@ type ptyPipe struct {
 }
 
 type multiOutput struct {
-	maxNameLength  int
-	mutex          sync.Mutex
-	pipes          map[*process]*ptyPipe
-	printProcName  bool
-	printTimestamp bool
-	logFile        *os.File
+	maxNameLength   int
+	mutex           sync.Mutex
+	pipes           map[*process]*ptyPipe
+	printProcName   bool
+	printTimestamp  bool
+	logFile         *os.File
+	interactiveProc *process
+	eol             string
 }
 
 // OpenLogFile opens path for the aggregated log stream, creating parent
@@ -99,6 +102,14 @@ func (m *multiOutput) Connect(proc *process) {
 func (m *multiOutput) PipeOutput(proc *process) {
 	pipe := m.openPipe(proc)
 
+	// Forward our terminal's stdin to the interactive process so its dev
+	// server can read keypresses (e.g. Expo/Metro reload and platform keys).
+	if proc == m.interactiveProc {
+		go func(pipe *ptyPipe) {
+			io.Copy(pipe.pty, os.Stdin)
+		}(pipe)
+	}
+
 	go func(proc *process, pipe *ptyPipe) {
 		scanLines(pipe.pty, func(b []byte) bool {
 			m.WriteLine(proc, b)
@@ -140,8 +151,13 @@ func (m *multiOutput) WriteLine(proc *process, p []byte) {
 		buf.WriteString("\033[0m| ")
 	}
 
+	eol := m.eol
+	if eol == "" {
+		eol = "\n"
+	}
+
 	buf.Write(p)
-	buf.WriteByte('\n')
+	buf.WriteString(eol)
 
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
