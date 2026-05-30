@@ -1,0 +1,10 @@
+bin/
+_vendor/
+Procfile
+tmp/
+.tmp/
+dist/
+.idea
+.env
+
+logbee

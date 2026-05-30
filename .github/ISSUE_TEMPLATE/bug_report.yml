@@ -1,0 +1,37 @@
+name: Bug report
+description: Report a problem with Logbee
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug, including what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Include your Procfile and the exact command (flags / env vars) you ran.
+      placeholder: |
+        1. Procfile:
+           web: ...
+        2. Ran: logbee --log-file dev.log
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Logbee version
+      description: Output of `logbee --version`.
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS / architecture
+      placeholder: macOS 14 arm64 / Ubuntu 24.04 amd64 / FreeBSD 14
+    validations:
+      required: true
