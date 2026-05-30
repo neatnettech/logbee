@@ -1,0 +1,15 @@
+version: "2"
+
+linters:
+  enable:
+    - goconst
+    - revive
+  # The codebase deliberately ignores errors on best-effort writes/closes
+  # (stdout, log file, pty), mirroring upstream Hivemind.
+  disable:
+    - errcheck
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
