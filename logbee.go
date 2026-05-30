@@ -12,7 +12,7 @@ import (
 
 var colors = []int{2, 3, 4, 5, 6, 42, 130, 103, 129, 108}
 
-type hivemindConfig struct {
+type logbeeConfig struct {
 	Title              string
 	Procfile           string
 	ProcNames          string
@@ -25,7 +25,7 @@ type hivemindConfig struct {
 	LogAppend          bool
 }
 
-type hivemind struct {
+type logbee struct {
 	title       string
 	output      *multiOutput
 	procs       []*process
@@ -35,8 +35,8 @@ type hivemind struct {
 	timeout     time.Duration
 }
 
-func newHivemind(conf hivemindConfig) (h *hivemind) {
-	h = &hivemind{timeout: time.Duration(conf.Timeout) * time.Second}
+func newLogbee(conf logbeeConfig) (h *logbee) {
+	h = &logbee{timeout: time.Duration(conf.Timeout) * time.Second}
 
 	if len(conf.Title) > 0 {
 		h.title = conf.Title
@@ -64,7 +64,7 @@ func newHivemind(conf hivemindConfig) (h *hivemind) {
 	return
 }
 
-func (h *hivemind) runProcess(proc *process) {
+func (h *logbee) runProcess(proc *process) {
 	h.procWg.Add(1)
 
 	go func() {
@@ -75,21 +75,21 @@ func (h *hivemind) runProcess(proc *process) {
 	}()
 }
 
-func (h *hivemind) waitForDoneOrInterrupt() {
+func (h *logbee) waitForDoneOrInterrupt() {
 	select {
 	case <-h.done:
 	case <-h.interrupted:
 	}
 }
 
-func (h *hivemind) waitForTimeoutOrInterrupt() {
+func (h *logbee) waitForTimeoutOrInterrupt() {
 	select {
 	case <-time.After(h.timeout):
 	case <-h.interrupted:
 	}
 }
 
-func (h *hivemind) waitForExit() {
+func (h *logbee) waitForExit() {
 	h.waitForDoneOrInterrupt()
 
 	for _, proc := range h.procs {
@@ -103,7 +103,7 @@ func (h *hivemind) waitForExit() {
 	}
 }
 
-func (h *hivemind) Run() {
+func (h *logbee) Run() {
 	fmt.Printf("\033]0;%s | logbee\007", h.title)
 
 	h.done = make(chan bool, len(h.procs))

@@ -15,7 +15,7 @@ var version = "1.2.0-rc.1"
 
 func main() {
 	var (
-		conf hivemindConfig
+		conf logbeeConfig
 		err  error
 	)
 
@@ -69,7 +69,7 @@ func main() {
 		conf.Root, err = filepath.Abs(conf.Root)
 		fatalOnErr(err)
 
-		newHivemind(conf).Run()
+		newLogbee(conf).Run()
 
 		return nil
 	}
