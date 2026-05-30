@@ -12,12 +12,30 @@ Logbee uses `pty` to capture process output. That fixes any problem with log cli
 
 ## Installation
 
-#### From Source
-
-You need Go 1.11 or later to build the project.
+#### With Homebrew (macOS / Linux)
 
 ```bash
-$ GO111MODULE=on go get -u -f github.com/neatnet/logbee
+$ brew install neatnet/tap/logbee
+```
+
+Or tap first, then install:
+
+```bash
+$ brew tap neatnet/tap
+$ brew install logbee
+```
+
+#### Download a release binary
+
+Prebuilt binaries for Linux, macOS, and FreeBSD are attached to each
+[release](https://github.com/neatnet/logbee/releases/latest).
+
+#### From Source
+
+You need Go 1.18 or later to build the project.
+
+```bash
+$ go install github.com/neatnet/logbee@latest
 ```
 
 ## Usage

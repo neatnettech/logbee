@@ -8,6 +8,10 @@ Pre-releases are tagged `vX.Y.Z-rc.A`; final releases `vX.Y.Z`.
 
 ## [Unreleased]
 
+### Added
+- Homebrew install via the `neatnet/tap` tap (`brew install neatnet/tap/logbee`).
+  GoReleaser publishes the formula automatically on final `vX.Y.Z` releases.
+
 ## [1.2.0-rc.1] - 2026-05-30
 
 First release of Logbee, a fork of [Hivemind](https://github.com/DarthSim/hivemind)
