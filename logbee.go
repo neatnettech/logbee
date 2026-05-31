@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"golang.org/x/term"
 )
 
@@ -26,6 +27,8 @@ type logbeeConfig struct {
 	LogFile            string
 	LogAppend          bool
 	Interactive        string
+	TUI                bool
+	Scrollback         int
 }
 
 type logbee struct {
@@ -36,10 +39,12 @@ type logbee struct {
 	done        chan bool
 	interrupted chan os.Signal
 	timeout     time.Duration
+	tui         bool
+	scrollback  int
 }
 
 func newLogbee(conf logbeeConfig) (h *logbee) {
-	h = &logbee{timeout: time.Duration(conf.Timeout) * time.Second}
+	h = &logbee{timeout: time.Duration(conf.Timeout) * time.Second, tui: conf.TUI, scrollback: conf.Scrollback}
 
 	if len(conf.Title) > 0 {
 		h.title = conf.Title
@@ -84,7 +89,12 @@ func (h *logbee) runProcess(proc *process) {
 
 	go func() {
 		defer h.procWg.Done()
-		defer func() { h.done <- true }()
+		defer func() {
+			if h.output.program != nil {
+				h.output.program.Send(procExitMsg{proc})
+			}
+			h.done <- true
+		}()
 
 		proc.Run()
 	}()
@@ -121,6 +131,65 @@ func (h *logbee) waitForExit() {
 func (h *logbee) Run() {
 	fmt.Printf("\033]0;%s | logbee\007", h.title)
 
+	h.done = make(chan bool, len(h.procs))
+
+	h.interrupted = make(chan os.Signal)
+	signal.Notify(h.interrupted, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+
+	if h.tui {
+		if term.IsTerminal(int(os.Stdout.Fd())) {
+			h.runTUI()
+			h.output.Close()
+			return
+		}
+		fmt.Fprintln(os.Stderr, "logbee: --tui requires a terminal; falling back to plain output")
+	}
+
+	h.runPlain()
+	h.output.Close()
+}
+
+// runTUI launches the Bubble Tea console (tab per process + aggregate) and
+// drives process lifecycle around it.
+func (h *logbee) runTUI() {
+	model := newTUIModel(h.output, h.procs, h.scrollback)
+	program := tea.NewProgram(model, tea.WithAltScreen())
+	h.output.program = program
+
+	for _, proc := range h.procs {
+		h.runProcess(proc)
+	}
+
+	// Quit the TUI once every process has exited on its own, or on an OS signal.
+	allDone := make(chan struct{})
+	go func() {
+		h.procWg.Wait()
+		close(allDone)
+	}()
+	go func() {
+		select {
+		case <-allDone:
+		case <-h.interrupted:
+		}
+		program.Quit()
+	}()
+
+	if _, err := program.Run(); err != nil {
+		fmt.Fprintf(os.Stderr, "logbee: tui error: %v\n", err)
+	}
+
+	// Tear down any processes still running (e.g. the user pressed q).
+	for _, proc := range h.procs {
+		go proc.Interrupt()
+	}
+	h.waitForTimeoutOrInterrupt()
+	for _, proc := range h.procs {
+		go proc.Kill()
+	}
+	h.procWg.Wait()
+}
+
+func (h *logbee) runPlain() {
 	// When a process is interactive, put our own terminal into raw mode so
 	// single keypresses are forwarded to it immediately (no line buffering or
 	// local echo). Raw mode disables output post-processing, so aggregated
@@ -134,11 +203,6 @@ func (h *logbee) Run() {
 		}
 	}
 
-	h.done = make(chan bool, len(h.procs))
-
-	h.interrupted = make(chan os.Signal)
-	signal.Notify(h.interrupted, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
-
 	for _, proc := range h.procs {
 		h.runProcess(proc)
 	}
@@ -146,6 +210,4 @@ func (h *logbee) Run() {
 	go h.waitForExit()
 
 	h.procWg.Wait()
-
-	h.output.Close()
 }

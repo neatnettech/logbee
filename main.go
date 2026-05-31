@@ -43,6 +43,8 @@ func main() {
 		cli.StringFlag{Name: "log-file, L", EnvVar: "LOGBEE_LOG_FILE", Usage: "write the aggregated, plain-text (no color) log stream to this file, live per line", Destination: &conf.LogFile},
 		cli.BoolFlag{Name: "log-append", EnvVar: "LOGBEE_LOG_APPEND", Usage: "append to the log file instead of truncating it on start", Destination: &conf.LogAppend},
 		cli.StringFlag{Name: "interactive, i", EnvVar: "LOGBEE_INTERACTIVE", Usage: "forward your terminal's stdin to this process so you can drive interactive dev servers (e.g. Expo/Metro: press r, i, a, j)", Destination: &conf.Interactive},
+		cli.BoolFlag{Name: "tui, u", EnvVar: "LOGBEE_TUI", Usage: "interactive console: one tab per process plus an aggregate tab (requires a terminal)", Destination: &conf.TUI},
+		cli.IntFlag{Name: "scrollback", EnvVar: "LOGBEE_SCROLLBACK", Usage: "number of log lines kept per tab in --tui mode", Value: 5000, Destination: &conf.Scrollback},
 	}
 
 	app.Action = func(c *cli.Context) error {
