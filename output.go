@@ -149,7 +149,7 @@ func (m *multiOutput) linePrefix(proc *process, now time.Time) string {
 
 	var buf bytes.Buffer
 
-	buf.WriteString(fmt.Sprintf("\033[1;38;5;%vm", proc.Color))
+	fmt.Fprintf(&buf, "\033[1;38;5;%vm", proc.Color)
 
 	if m.printTimestamp {
 		buf.WriteString(now.Format("15:04:05"))

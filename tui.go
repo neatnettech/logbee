@@ -17,11 +17,11 @@ type ringBuffer struct {
 	max   int
 }
 
-func newRingBuffer(max int) *ringBuffer {
-	if max < 1 {
-		max = 1
+func newRingBuffer(capacity int) *ringBuffer {
+	if capacity < 1 {
+		capacity = 1
 	}
-	return &ringBuffer{lines: make([]string, 0, max), max: max}
+	return &ringBuffer{lines: make([]string, 0, capacity), max: capacity}
 }
 
 func (r *ringBuffer) push(s string) {
