@@ -8,16 +8,16 @@ Pre-releases are tagged `vX.Y.Z-rc.A`; final releases `vX.Y.Z`.
 
 ## [Unreleased]
 
-### Added
-- Homebrew install via the `neatnettech/tap` tap (`brew install neatnettech/tap/logbee`).
-  GoReleaser publishes the formula automatically on final `vX.Y.Z` releases.
-
-## [1.2.0-rc.1] - 2026-05-30
+## [1.2.0] - 2026-06-01
 
 First release of Logbee, a fork of [Hivemind](https://github.com/DarthSim/hivemind)
 by neatnettech.
 
 ### Added
+- `--interactive, -i <name>` (env `LOGBEE_INTERACTIVE`): forward your terminal's
+  stdin to the named process so interactive dev servers (e.g. Expo/Metro) receive
+  keypresses (`r`, `i`, `a`, `j`). The terminal is put in raw mode while running and
+  restored on exit.
 - `--log-file, -L` (env `LOGBEE_LOG_FILE`): write the aggregated output stream to
   a file, live and line-by-line, for `tail -f` or external analytics/LLM pipelines.
   The file is plain, greppable text — the `name | ` prefix carries no color escapes
@@ -25,10 +25,14 @@ by neatnettech.
   automatically. The console output is unchanged (colors intact).
 - `--log-append` (env `LOGBEE_LOG_APPEND`): append to the log file instead of
   truncating it on start.
+- Homebrew install from this repo's tap. GoReleaser publishes `Formula/logbee.rb`
+  automatically on final `vX.Y.Z` releases:
+  `brew tap neatnettech/logbee https://github.com/neatnettech/logbee` then
+  `brew install neatnettech/logbee/logbee`.
 
 ### Changed
 - Rebranded from Hivemind to Logbee: module path `github.com/neatnettech/logbee`,
   binary `logbee`, and all environment variables `HIVEMIND_*` → `LOGBEE_*`.
 
-[Unreleased]: https://github.com/neatnettech/logbee/compare/v1.2.0-rc.1...HEAD
-[1.2.0-rc.1]: https://github.com/neatnettech/logbee/releases/tag/v1.2.0-rc.1
+[Unreleased]: https://github.com/neatnettech/logbee/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/neatnettech/logbee/releases/tag/v1.2.0
