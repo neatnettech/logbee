@@ -15,14 +15,14 @@ Logbee uses `pty` to capture process output. That fixes any problem with log cli
 #### With Homebrew (macOS / Linux)
 
 ```bash
-$ brew install neatnettech/tap/logbee
+$ brew tap neatnettech/logbee https://github.com/neatnettech/logbee
+$ brew install neatnettech/logbee/logbee
 ```
 
-Or tap first, then install:
+Upgrade later with:
 
 ```bash
-$ brew tap neatnettech/tap
-$ brew install logbee
+$ brew upgrade neatnettech/logbee/logbee
 ```
 
 #### Download a release binary

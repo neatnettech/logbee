@@ -18,7 +18,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version: "1.24"
           cache: true
 
       - uses: goreleaser/goreleaser-action@v6
@@ -26,6 +26,5 @@ jobs:
           version: "~> v2"
           args: release --clean
         env:
+          # Single-repo tap: GITHUB_TOKEN (contents: write) pushes Formula/logbee.rb.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Push access to neatnettech/homebrew-tap (PAT or fine-grained token).
-          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}

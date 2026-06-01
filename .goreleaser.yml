@@ -34,16 +34,19 @@ checksum:
 release:
   prerelease: auto
 
-# Publish a Homebrew formula to the neatnettech/homebrew-tap repo.
+# Publish a Homebrew formula into this same repo (Formula/logbee.rb).
+# Single-repo tap: the built-in GITHUB_TOKEN (contents: write) pushes the
+# formula, so no separate tap repo or PAT secret is needed.
 # skip_upload: auto -> formula is NOT pushed for pre-releases (rc) or
-# snapshots, only for final vX.Y.Z tags. Requires a HOMEBREW_TAP_GITHUB_TOKEN
-# secret with push access to the tap repo.
+# snapshots, only for final vX.Y.Z tags.
+# Install: brew tap neatnettech/logbee https://github.com/neatnettech/logbee
+#          brew install neatnettech/logbee/logbee
 brews:
   - name: logbee
     repository:
       owner: neatnettech
-      name: homebrew-tap
-      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+      name: logbee
+      token: "{{ .Env.GITHUB_TOKEN }}"
     directory: Formula
     homepage: "https://github.com/neatnettech/logbee"
     description: "Process manager for Procfile-based apps, with live log-file output"

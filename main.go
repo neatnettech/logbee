@@ -10,8 +10,8 @@ import (
 )
 
 // version is the build version. Overridden at release time via
-// -ldflags "-X main.version=...". Defaults to the current pre-release.
-var version = "1.2.0-rc.1"
+// -ldflags "-X main.version=...". Defaults to the current release.
+var version = "1.2.0"
 
 func main() {
 	var (
