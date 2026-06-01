@@ -78,6 +78,58 @@ The file is plain, greppable text: the `name | ` prefix carries no color escapes
 
 The file is truncated on start by default; pass `--log-append` (env `LOGBEE_LOG_APPEND`) to append to an existing file instead.
 
+### Driving an interactive process (Expo, Metro, etc.)
+
+By default Logbee does not forward your keyboard to managed processes, so interactive dev servers that listen for keypresses (Expo/Metro: `r` to reload, `i`/`a` to open iOS/Android, `j` for the debugger) can't be controlled. Pass `--interactive` (`-i`, env `LOGBEE_INTERACTIVE`) with the process name to forward your terminal's stdin to that one process:
+
+```bash
+$ logbee --interactive expo
+```
+
+While an interactive process runs, Logbee puts your terminal into raw mode so single keypresses reach the process immediately (no need to press Enter). `Ctrl-C` is forwarded to the interactive process; when it exits, Logbee shuts the rest down as usual. Only one process can be interactive at a time, and its name must match an entry that's actually launched (respecting `--processes`).
+
+### Interactive console (`--tui`)
+
+Pass `--tui` (`-u`, env `LOGBEE_TUI`) for a full-screen console instead of a flat stream. You get **one tab per process plus an aggregate `all` tab** (the same color-prefixed, interleaved view as the default output):
+
+```bash
+$ logbee --tui
+$ logbee --tui -i metro path/to/Procfile   # start with the metro tab live
+```
+
+The console requires a terminal. When stdout is piped or redirected, Logbee prints a warning and falls back to plain streaming, so pipes, `--log-file`, and CI stay unaffected. Use `--scrollback` (env `LOGBEE_SCROLLBACK`, default `5000`) to set how many log lines each tab keeps.
+
+**Navigation**
+
+| Key | Action |
+|-----|--------|
+| `←` / `→`, `Tab` / `Shift+Tab` | Switch tabs |
+| `0`–`9` | Jump to a tab by index (`0` = aggregate) |
+| `↑` / `↓`, `PgUp` / `PgDn`, `Home` / `End` | Scroll the active tab |
+| `Home` / `End`, `g` / `G` | Jump to top / bottom |
+| `f` | Toggle follow (auto-scroll to newest) |
+| `i` / `Enter` | Go **live** on the current process tab |
+| `?` | Toggle the full key-map overlay |
+| `q`, `Ctrl-C` | Quit |
+
+The tab bar sits along the **bottom** of the console (log output fills the space above it). Tabs show `●` when live and `*` once their process has exited. Press `?` at any time for the full key map.
+
+**Live mode — driving a dev server**
+
+On a process tab, press `i` (or start it live with `-i <name>`) to forward every keystroke straight to that process — drive Expo/Metro, Vite, or any interactive CLI exactly as if you ran it directly (`r` reload, `i`/`a` iOS/Android, `j` debugger, …).
+
+While live, the leader key **`Ctrl-B`** (tmux-style — Expo/Metro don't use it) gives you Logbee commands without leaving the process:
+
+| Sequence | Action |
+|----------|--------|
+| `Ctrl-B` then `0`–`9` | Jump to a tab |
+| `Ctrl-B` then `q` | Quit Logbee |
+| `Ctrl-B` then `i` | Stop live (back to scroll/nav) |
+| `Ctrl-B` then `?` | Show the key-map overlay |
+| `Ctrl-B` then `Ctrl-B` | Send a literal `Ctrl-B` to the process |
+
+`Ctrl-C` while live is forwarded to the process (so the dev server handles it); quit Logbee itself with `Ctrl-B` `q`.
+
 ### Environment
 
 If you need to set specific environment variables before running a `Procfile`, you can specify them in the `.env` file in the current working directory. The file should contain `variable=value` pairs, one per line:

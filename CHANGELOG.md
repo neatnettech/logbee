@@ -9,6 +9,10 @@ Pre-releases are tagged `vX.Y.Z-rc.A`; final releases `vX.Y.Z`.
 ## [Unreleased]
 
 ### Added
+- `--interactive, -i <name>` (env `LOGBEE_INTERACTIVE`): forward your terminal's
+  stdin to the named process so interactive dev servers (e.g. Expo/Metro) receive
+  keypresses (`r`, `i`, `a`, `j`). The terminal is put in raw mode while running and
+  restored on exit.
 - Homebrew install via the `neatnettech/tap` tap (`brew install neatnettech/tap/logbee`).
   GoReleaser publishes the formula automatically on final `vX.Y.Z` releases.
 
